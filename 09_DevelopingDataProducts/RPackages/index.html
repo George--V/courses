@@ -1,70 +1,198 @@
 <!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
 <html>
 <head>
-  <title>Building R Packages</title>
-  <meta charset="utf-8">
-  <meta name="description" content="Building R Packages">
-  <meta name="author" content="Roger D. Peng, Associate Professor of Biostatistics">
-  <meta name="generator" content="slidify" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <link rel="stylesheet" href="../../librariesNew/frameworks/io2012/css/default.css" media="all" >
-  <link rel="stylesheet" href="../../librariesNew/frameworks/io2012/css/phone.css" 
-    media="only screen and (max-device-width: 480px)" >
-  <link rel="stylesheet" href="../../librariesNew/frameworks/io2012/css/slidify.css" >
-  <link rel="stylesheet" href="../../librariesNew/highlighters/highlight.js/css/tomorrow.css" />
-  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  
-  
-  <!-- Grab CDN jQuery, fall back to local if offline -->
-  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
-  <script>window.jQuery || document.write('<script src="../../librariesNew/widgets/quiz/js/jquery.js"><\/script>')</script> 
-  <script data-main="../../librariesNew/frameworks/io2012/js/slides" 
-    src="../../librariesNew/frameworks/io2012/js/require-1.0.8.min.js">
-  </script>
-  
-  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>What is an R Package?</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
 
 </head>
-<body style="opacity: 0">
-  <slides class="layout-widescreen">
-    
-    <!-- LOGO SLIDE -->
-        <slide class="title-slide segue nobackground">
-  <aside class="gdbar">
-    <img src="../../assets/img/bloomberg_shield.png">
-  </aside>
-  <hgroup class="auto-fadein">
-    <h1>Building R Packages</h1>
-    <h2></h2>
-    <p>Roger D. Peng, Associate Professor of Biostatistics<br/>Johns Hopkins Bloomberg School of Public Health</p>
-  </hgroup>
-  <article></article>  
-</slide>
-    
 
-    <!-- SLIDES -->
-    <slide class="" id="slide-1" style="background:;">
-  <hgroup>
-    <h2>What is an R Package?</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<body>
+<h2>What is an R Package?</h2>
+
+<ul>
 <li>A mechanism for extending the basic functionality of R</li>
 <li>A collection of R functions, or other (data) objects</li>
 <li>Organized in a systematic fashion to provide a minimal amount of consistency</li>
 <li>Written by users/developers everywhere</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-2" style="background:;">
-  <hgroup>
-    <h2>Where are These R Packages?</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<h2>Where are These R Packages?</h2>
+
+<ul>
 <li><p>Primarily available from CRAN and Bioconductor</p></li>
 <li><p>Also available from GitHub, Bitbucket, Gitorious, etc. (and elsewhere)</p></li>
 <li><p>Packages from CRAN/Bioconductor can be installed with <code>install.packages()</code></p></li>
@@ -75,17 +203,12 @@ the <b>devtools</b> package</p></li>
 <p>You do not have to put a package on a central repository, but doing so
 makes it easier for others to install your package.</p>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-3" style="background:;">
-  <hgroup>
-    <h2>What&#39;s the Point?</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>&quot;Why not just make some code available?&quot;</li>
+<h2>What&#39;s the Point?</h2>
+
+<ul>
+<li>&ldquo;Why not just make some code available?&rdquo;</li>
 <li>Documentation / vignettes</li>
 <li>Centralized resources like CRAN</li>
 <li>Minimal standards for reliability and robustness</li>
@@ -94,16 +217,11 @@ makes it easier for others to install your package.</p>
 <li>Users know that it will at least load properly</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-4" style="background:;">
-  <hgroup>
-    <h2>Package Development Process</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<h2>Package Development Process</h2>
+
+<ul>
 <li>Write some code in an R script file (.R)</li>
 <li>Want to make code available to others</li>
 <li>Incorporate R script file into R package structure</li>
@@ -112,16 +230,11 @@ makes it easier for others to install your package.</p>
 <li>Package it up!</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-5" style="background:;">
-  <hgroup>
-    <h2>Package Development Process</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<h2>Package Development Process</h2>
+
+<ul>
 <li>Submit package to CRAN or Bioconductor</li>
 <li>Push source code repository to GitHub or other source code sharing web site</li>
 <li>People find all kinds of problems with your code
@@ -133,16 +246,11 @@ makes it easier for others to install your package.</p>
 <li>You incorporate the changes and release a new version</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-6" style="background:;">
-  <hgroup>
-    <h2>R Package Essentials</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<h2>R Package Essentials</h2>
+
+<ul>
 <li>An R package is started by creating a directory with the name of the R package</li>
 <li>A DESCRIPTION file which has info about the package</li>
 <li>R code! (in the R/ sub-directory)</li>
@@ -151,16 +259,11 @@ makes it easier for others to install your package.</p>
 <li>Full requirements in Writing R Extensions</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-7" style="background:;">
-  <hgroup>
-    <h2>The DESCRIPTION File</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<h2>The DESCRIPTION File</h2>
+
+<ul>
 <li><b>Package</b>: Name of package (e.g. library(name))</li>
 <li><b>Title</b>: Full name of package</li>
 <li><b>Description</b>: Longer description of package in one sentence (usually)</li>
@@ -170,16 +273,11 @@ makes it easier for others to install your package.</p>
 <li><b>License</b>: License for the source code</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-8" style="background:;">
-  <hgroup>
-    <h2>The DESCRIPTION File</h2>
-  </hgroup>
-  <article data-timings="">
-    <p>These fields are optional but commonly used</p>
+<h2>The DESCRIPTION File</h2>
+
+<p>These fields are optional but commonly used</p>
 
 <ul>
 <li><b>Depends</b>: R packages that your package depends on</li>
@@ -189,17 +287,12 @@ makes it easier for others to install your package.</p>
 <li><b>Other</b> fields can be added</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-9" style="background:;">
-  <hgroup>
-    <h2>DESCRIPTION File: <code>gpclib</code></h2>
-  </hgroup>
-  <article data-timings="">
-    <p><b>Package</b>:  gpclib<br />
-<b>Title</b>:  General Polygon Clipping Library for R
+<h2>DESCRIPTION File: <code>gpclib</code></h2>
+
+<p><b>Package</b>:  gpclib<br />
+<b>Title</b>:  General Polygon Clipping Library for R<br />
 <b>Description</b>:  General polygon clipping routines for R based on Alan Murta&#39;s C library<br />
 <b>Version</b>:  1.5-5<br />
 <b>Author</b>:  Roger D. Peng <a href="mailto:rpeng@jhsph.edu">rpeng@jhsph.edu</a> with contributions from Duncan Murdoch and Barry Rowlingson; GPC library by Alan Murta<br />
@@ -210,121 +303,86 @@ makes it easier for others to install your package.</p>
 <b>Date</b>:  2013-04-01<br />
 <b>URL</b>:  <a href="http://www.cs.man.ac.uk/%7Etoby/gpc/">http://www.cs.man.ac.uk/~toby/gpc/</a>, <a href="http://github.com/rdpeng/gpclib">http://github.com/rdpeng/gpclib</a></p>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-10" style="background:;">
-  <hgroup>
-    <h2>R Code</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<h2>R Code</h2>
+
+<ul>
 <li>Copy R code into the R/ sub-directory</li>
 <li>There can be any number of files in this directory</li>
 <li>Usually separate out files into logical groups</li>
 <li>Code for all functions should be included here and not anywhere else in the package</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-11" style="background:;">
-  <hgroup>
-    <h2>The NAMESPACE File</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<h2>The NAMESPACE File</h2>
+
+<ul>
 <li>Used to indicate which functions are <b>exported</b></li>
 <li>Exported functions can be called by the user and are considered the public API</li>
 <li>Non-exported functions cannot be called directly by the user (but the code can be viewed)</li>
 <li>Hides implementation details from users and makes a cleaner package interface</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-12" style="background:;">
-  <hgroup>
-    <h2>The NAMESPACE File</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<h2>The NAMESPACE File</h2>
+
+<ul>
 <li>You can also indicate what functions you <b>import</b> from other packages</li>
 <li>This allows for your package to use other packages without making other packages visible to the user</li>
 <li>Importing a function loads the package but does not attach it to the search list</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-13" style="background:;">
-  <hgroup>
-    <h2>The NAMESPACE File</h2>
-  </hgroup>
-  <article data-timings="">
-    <p>Key directives</p>
+<h2>The NAMESPACE File</h2>
+
+<p>Key directives</p>
 
 <ul>
-<li>export(&quot;&lt;function&gt;&quot;) </li>
-<li>import(&quot;&lt;package&gt;&quot;)</li>
-<li>importFrom(&quot;&lt;package&gt;&quot;, &quot;&lt;function&gt;&quot;)</li>
+<li>export(&ldquo;&lt;function&gt;&rdquo;) </li>
+<li>import(&ldquo;&lt;package&gt;&rdquo;)</li>
+<li>importFrom(&ldquo;&lt;package&gt;&rdquo;, &ldquo;&lt;function&gt;&rdquo;)</li>
 </ul>
 
 <p>Also important</p>
 
 <ul>
-<li>exportClasses(&quot;&lt;class&gt;&quot;)</li>
-<li>exportMethods(&quot;&lt;generic&gt;&quot;)</li>
+<li>exportClasses(&ldquo;&lt;class&gt;&rdquo;)</li>
+<li>exportMethods(&ldquo;&lt;generic&gt;&rdquo;)</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-14" style="background:;">
-  <hgroup>
-    <h2>NAMESPACE File: <code>mvtsplot</code> package</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code class="r">export(&quot;mvtsplot&quot;)
+<h2>NAMESPACE File: <code>mvtsplot</code> package</h2>
+
+<pre><code class="r">export(&quot;mvtsplot&quot;)
 importFrom(graphics, &quot;Axis&quot;)
 import(splines)
 </code></pre>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-15" style="background:;">
-  <hgroup>
-    <h2>NAMESPACE File: <code>gpclib</code> package</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code class="r">export(&quot;read.polyfile&quot;, &quot;write.polyfile&quot;)
+<h2>NAMESPACE File: <code>gpclib</code> package</h2>
+
+<pre><code class="r">export(&quot;read.polyfile&quot;, &quot;write.polyfile&quot;)
 
 importFrom(graphics, plot)
 
 exportClasses(&quot;gpc.poly&quot;, &quot;gpc.poly.nohole&quot;)
 
-exportMethods(&quot;show&quot;, &quot;get.bbox&quot;, &quot;plot&quot;, &quot;intersect”, &quot;union”, &quot;setdiff&quot;, 
+exportMethods(&quot;show&quot;, &quot;get.bbox&quot;, &quot;plot&quot;, &quot;intersectâ, &quot;unionâ, &quot;setdiff&quot;, 
               &quot;[&quot;, &quot;append.poly&quot;, &quot;scale.poly&quot;, &quot;area.poly&quot;, &quot;get.pts&quot;, 
               &quot;coerce&quot;, &quot;tristrip&quot;, &quot;triangulate&quot;)
 </code></pre>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-16" style="background:;">
-  <hgroup>
-    <h2>Documentation</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<h2>Documentation</h2>
+
+<ul>
 <li>Documentation files (.Rd) placed in man/ sub-directory</li>
 <li>Written in a specific markup language</li>
 <li>Required for every exported function
@@ -335,16 +393,11 @@ exportMethods(&quot;show&quot;, &quot;get.bbox&quot;, &quot;plot&quot;, &quot;in
 <li>You can document other things like concepts, package overview</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-17" style="background:;">
-  <hgroup>
-    <h2>Help File Example: <code>line</code> Function</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>\name{line}
+<h2>Help File Example: <code>line</code> Function</h2>
+
+<pre><code>\name{line}
 \alias{line}
 \alias{residuals.tukeyline}
 \title{Robust Line Fitting}
@@ -353,16 +406,11 @@ exportMethods(&quot;show&quot;, &quot;get.bbox&quot;, &quot;plot&quot;, &quot;in
 }
 </code></pre>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-18" style="background:;">
-  <hgroup>
-    <h2>Help File Example: <code>line</code> Function</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>\usage{
+<h2>Help File Example: <code>line</code> Function</h2>
+
+<pre><code>\usage{
 line(x, y)
 }
 \arguments{
@@ -371,16 +419,11 @@ line(x, y)
 }
 </code></pre>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-19" style="background:;">
-  <hgroup>
-    <h2>Help File Example: <code>line</code> Function</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>\details{
+<h2>Help File Example: <code>line</code> Function</h2>
+
+<pre><code>\details{
   Cases with missing values are omitted.
 
   Long vectors are not supported.
@@ -393,32 +436,22 @@ line(x, y)
 }
 </code></pre>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-20" style="background:;">
-  <hgroup>
-    <h2>Help File Example: <code>line</code> Function</h2>
-  </hgroup>
-  <article data-timings="">
-    <pre><code>\references{
+<h2>Help File Example: <code>line</code> Function</h2>
+
+<pre><code>\references{
   Tukey, J. W. (1977).
   \emph{Exploratory Data Analysis},
   Reading Massachusetts: Addison-Wesley.
 }
 </code></pre>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-21" style="background:;">
-  <hgroup>
-    <h2>Building and Checking</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<h2>Building and Checking</h2>
+
+<ul>
 <li><p>R CMD build is a command-line program that creates a package archive
 file (<code>.tar.gz</code>)</p></li>
 <li><p>R CMD check runs a battery of tests on the package</p></li>
@@ -431,16 +464,11 @@ terminal or command-shell application</p></li>
 system(&quot;R CMD check newpackage&quot;)
 </code></pre>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-22" style="background:;">
-  <hgroup>
-    <h2>Checking</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<h2>Checking</h2>
+
+<ul>
 <li>R CMD check runs a battery tests</li>
 <li>Documentation exists</li>
 <li>Code can be loaded, no major coding problems or errors</li>
@@ -449,48 +477,33 @@ system(&quot;R CMD check newpackage&quot;)
 <li>All tests must pass to put package on CRAN</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-23" style="background:;">
-  <hgroup>
-    <h2>Getting Started</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
-<li>The <code>package.skeleton()</code> function in the utils package creates a &quot;skeleton&quot; R package</li>
+<h2>Getting Started</h2>
+
+<ul>
+<li>The <code>package.skeleton()</code> function in the utils package creates a &ldquo;skeleton&rdquo; R package</li>
 <li>Directory structure (R/, man/), DESCRIPTION file, NAMESPACE file, documentation files</li>
 <li>If there are functions visible in your workspace, it writes R code files to the R/ directory</li>
 <li>Documentation stubs are created in man/</li>
 <li>You need to fill in the rest!</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-24" style="background:;">
-  <hgroup>
-    <h2>Summary</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<h2>Summary</h2>
+
+<ul>
 <li>R packages provide a systematic way to make R code available to others</li>
 <li>Standards ensure that packages have a minimal amount of documentation and robustness</li>
 <li>Obtained from CRAN, Bioconductor, Github, etc.</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<hr/>
 
-<slide class="" id="slide-25" style="background:;">
-  <hgroup>
-    <h2>Summary</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<h2>Summary</h2>
+
+<ul>
 <li>Create a new directory with R/ and man/ sub-directories (or just use package.skeleton())</li>
 <li>Write a DESCRIPTION file</li>
 <li>Copy R code into the R/ sub-directory</li>
@@ -499,191 +512,7 @@ system(&quot;R CMD check newpackage&quot;)
 <li>Build and check</li>
 </ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-    <slide class="backdrop"></slide>
-  </slides>
-  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
-    <ul>
-      <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=1 title='What is an R Package?'>
-         1
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=2 title='Where are These R Packages?'>
-         2
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=3 title='What&#39;s the Point?'>
-         3
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=4 title='Package Development Process'>
-         4
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=5 title='Package Development Process'>
-         5
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=6 title='R Package Essentials'>
-         6
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=7 title='The DESCRIPTION File'>
-         7
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=8 title='The DESCRIPTION File'>
-         8
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=9 title='DESCRIPTION File: <code>gpclib</code>'>
-         9
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=10 title='R Code'>
-         10
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=11 title='The NAMESPACE File'>
-         11
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title='The NAMESPACE File'>
-         12
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=13 title='The NAMESPACE File'>
-         13
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=14 title='NAMESPACE File: <code>mvtsplot</code> package'>
-         14
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=15 title='NAMESPACE File: <code>gpclib</code> package'>
-         15
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=16 title='Documentation'>
-         16
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=17 title='Help File Example: <code>line</code> Function'>
-         17
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=18 title='Help File Example: <code>line</code> Function'>
-         18
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=19 title='Help File Example: <code>line</code> Function'>
-         19
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=20 title='Help File Example: <code>line</code> Function'>
-         20
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=21 title='Building and Checking'>
-         21
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=22 title='Checking'>
-         22
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=23 title='Getting Started'>
-         23
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=24 title='Summary'>
-         24
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=25 title='Summary'>
-         25
-      </a>
-    </li>
-  </ul>
-  </div>  <!--[if IE]>
-    <script 
-      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
-    </script>
-    <script>CFInstall.check({mode: 'overlay'});</script>
-  <![endif]-->
 </body>
-  <!-- Load Javascripts for Widgets -->
-  
-  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      tex2jax: {
-        inlineMath: [['$','$'], ['\\(','\\)']],
-        processEscapes: true
-      }
-    });
-  </script>
-  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-  </script> -->
-  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="../../librariesNew/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
-</script>
-<!-- LOAD HIGHLIGHTER JS FILES -->
-  <script src="../../librariesNew/highlighters/highlight.js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
-  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
-   
-  </html>
+
+</html>
+
